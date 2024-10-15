@@ -1,0 +1,16 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Driver1/bin/Debug/net8.0
+/Driver1/obj
+/.vs/NumberToWords/DesignTimeBuild
+/.vs/NumberToWords/FileContentIndex
+/.vs/NumberToWords/v17/TestStore/0
+/.vs/NumberToWords/v17
+/NumberToWords/bin/Debug/net8.0
+/NumberToWords/obj
+/NumberToWordsLib/bin/Debug/net8.0
+/NumberToWordsLib/obj
+/NumberToWordsLibTests/bin/Debug/net8.0
+/NumberToWordsLibTests/obj
