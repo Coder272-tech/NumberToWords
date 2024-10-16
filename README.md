@@ -38,7 +38,7 @@ dollars"
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/NumberToWords.git
+   git clone https://github.com/Coder272-tech/NumberToWords.git
    ```
    
 NumberToWords is the MVC application
