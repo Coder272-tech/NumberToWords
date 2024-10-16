@@ -20,8 +20,8 @@ namespace NumberToWordsLib
         public string Convert(decimal amount)
         {
             // Split the amount into integer and fractional parts
-            int integerPart = (int)Math.Floor(amount);
-            int fractionalPart = (int)((amount - integerPart) * 100);
+            long integerPart = (long)Math.Floor(amount);
+            long fractionalPart = (long)((amount - integerPart) * 100);
 
             // Convert the integer part using the chain of responsibility
             string integerPartWords = _handlerChain.Handle(integerPart);

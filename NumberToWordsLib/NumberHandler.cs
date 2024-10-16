@@ -14,7 +14,7 @@ namespace NumberToWordsLib
             return handler;
         }
 
-        public virtual string Handle(int number)
+        public virtual string Handle(long number)
         {
             if (_nextHandler != null)
             {
@@ -23,7 +23,7 @@ namespace NumberToWordsLib
             return string.Empty;
         }
 
-        protected string NumberToWordsBelow1000(int number)
+        protected string NumberToWordsBelow1000(long number)
         {
             var unitsMap = new[]
             {
@@ -41,14 +41,14 @@ namespace NumberToWordsLib
                 return unitsMap[number];
             else if (number < 100)
             {
-                int tens = number / 10;
-                int units = number % 10;
+                long tens = number / 10;
+                long units = number % 10;
                 return tensMap[tens] + (units > 0 ? "-" + unitsMap[units] : "");
             }
             else
             {
-                int hundreds = number / 100;
-                int remainder = number % 100;
+                long hundreds = number / 100;
+                long remainder = number % 100;
                 return unitsMap[hundreds] + " hundred" + (remainder > 0 ? " " + NumberToWordsBelow1000(remainder) : "");
             }
         }

@@ -3,6 +3,6 @@
     public interface INumberHandler
     {
         INumberHandler SetNext(INumberHandler handler);
-        string Handle(int number);
+        string Handle(long number);
     }
 }
