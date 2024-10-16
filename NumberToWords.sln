@@ -5,8 +5,6 @@ VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NumberToWordsSite", "NumberToWords\NumberToWordsSite.csproj", "{A8F332F2-7A84-419C-8681-A4F9A113E7F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver1", "Driver1\Driver1.csproj", "{E768859F-E0A3-4219-956D-658E2EA16893}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NumberToWordsLib", "NumberToWordsLib\NumberToWordsLib.csproj", "{88926CD1-5256-460D-B6FB-E4E4683C86AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NumberToWordsLibTests", "NumberToWordsLibTests\NumberToWordsLibTests.csproj", "{9E4D13EF-259A-4057-B6C1-D18FD4F576BB}"
@@ -21,10 +19,6 @@ Global
 		{A8F332F2-7A84-419C-8681-A4F9A113E7F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8F332F2-7A84-419C-8681-A4F9A113E7F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8F332F2-7A84-419C-8681-A4F9A113E7F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E768859F-E0A3-4219-956D-658E2EA16893}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E768859F-E0A3-4219-956D-658E2EA16893}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E768859F-E0A3-4219-956D-658E2EA16893}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E768859F-E0A3-4219-956D-658E2EA16893}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88926CD1-5256-460D-B6FB-E4E4683C86AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{88926CD1-5256-460D-B6FB-E4E4683C86AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88926CD1-5256-460D-B6FB-E4E4683C86AD}.Release|Any CPU.ActiveCfg = Release|Any CPU

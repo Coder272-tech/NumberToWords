@@ -13,7 +13,8 @@ namespace NumberToWordsLibTests
             string expected = "Two thousand five hundred twenty-three and 04/100 dollars";
 
             // Act
-            string result = NumberToWords.ConvertAmountToWords(amount);
+            var processor = new NumberToWordsProcessor();
+            string result = processor.Convert(amount);
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -27,10 +28,12 @@ namespace NumberToWordsLibTests
             string expected = "Nine and 12/100 dollars";
 
             // Act
-            string result = NumberToWords.ConvertAmountToWords(amount);
+            var processor = new NumberToWordsProcessor();
+            string result = processor.Convert(amount);
 
             // Assert
             Assert.AreEqual(expected, result);
         }
+
     }
 }
