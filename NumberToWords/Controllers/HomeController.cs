@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NumberToWordsLib;
 
 namespace NumberToWordsSite.Controllers
 {
@@ -21,7 +22,8 @@ namespace NumberToWordsSite.Controllers
             try
             {
                 _logger.LogInformation("ConvertToWords accessed.");
-                var words = NumberToWordsLib.NumberToWords.ConvertAmountToWords(request.Amount);
+                var processor = new NumberToWordsProcessor();
+                string words = processor.Convert(request.Amount);
                 return Json(new { words });
             }
             catch (Exception ex)
