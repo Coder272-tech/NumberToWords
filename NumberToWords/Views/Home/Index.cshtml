@@ -3,14 +3,15 @@
 }
 
 <h2>Number To Words Converter</h2>
-
+<div class="form-group">
 <div>
-    <input type="text" id="numberInput" placeholder="Enter a number" />
-    <button onclick="convertToWords()">Convert</button>
+    <div class="form-label">Enter a number</div>
+    <input type="text" class="form-control" id="numberInput"/>
+    <button class="btn btn-primary" onclick="convertToWords()">Convert</button>
 </div>
 
-<div id="result"></div>
-
+    <div class="mt-3 alert alert-success" id="result" style="display: none;"></div>
+</div>
 @section Scripts {
     <script type="text/javascript">
         function convertToWords() {
@@ -24,13 +25,23 @@
                 },
                 body: JSON.stringify({ amount: number })
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        // Force an error to be thrown for non-2xx status codes
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     document.getElementById('result').innerText = data.words;
+                    document.getElementById('result').className = 'mt-3 alert alert-success';
+                    document.getElementById('result').style.display = 'block';
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('result').innerText = 'Error converting number to words';
+                    document.getElementById('result').className = 'mt-3 alert alert-danger';
+                    document.getElementById('result').style.display = 'block';
                 });
         }
     </script>

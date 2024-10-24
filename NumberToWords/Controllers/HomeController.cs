@@ -29,7 +29,7 @@ namespace NumberToWordsSite.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex,"Error in ConvertToWords: " + ex.Message + "\r\nStackTrace: " + ex.StackTrace + "\r\nInnerException: " + ex.InnerException );
-                return BadRequest(new { error = ex.Message });
+                return BadRequest(new { error = "Invalid input provided." });
             }
         }
 
