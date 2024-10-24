@@ -1,0 +1,210 @@
+Interviewer: "Tell me a bit about yourself and your experience working with C# and .NET."
+
+Response:
+I have over 12 years of professional experience developing software solutions with C# and the .NET ecosystem. My background spans across different industries, including SaaS, fintech, and healthcare, working on both monolithic applications and modern microservices-based architectures. I’ve contributed to full-stack solutions, although my primary focus has been back-end development, designing RESTful APIs, implementing business logic, and ensuring high performance in scalable systems.
+
+Recently, I’ve worked extensively with .NET 6 and .
+
+
+
+
+
+
+You said:
+interviewer: what is dbcontext?
+ChatGPT said:
+ChatGPT
+Response:
+DbContext is a class provided by Entity Framework (EF) that acts as a bridge between the domain or entity model of an application and the underlying database. It manages the interaction with the database, including querying, saving, and tracking changes to entities. Essentially, it serves as a session that helps developers perform CRUD operations using LINQ instead of raw SQL queries.
+
+When working with EF, the DbContext:
+
+Manages Connections: It establishes and maintains connections to the database.
+Tracks Changes: Keeps track of changes made to entities, so it can generate appropriate SQL commands when saving data.
+Facilitates Transactions: It ensures that a batch of operations can be executed as a single unit of work, with rollback in case of failure.
+Provides Querying Capabilities: Enables querying through LINQ, making it easy to retrieve data from the database.
+Configures Models: It applies configurations like relationships, keys, and constraints using the Fluent API or Data Annotations.
+Here's a quick example:
+
+csharp
+Copy code
+public class ApplicationDbContext : DbContext
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+        : base(options)
+    {
+    }
+
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Order> Orders { get; set; }
+}
+In this example:
+
+ApplicationDbContext inherits from DbContext.
+DbSet<Customer> and DbSet<Order> represent tables in the database.
+The DbContext helps with the lifecycle of queries like:
+
+csharp
+Copy code
+using (var context = new ApplicationDbContext(options))
+{
+    var customers = context.Customers.ToList();
+    var newOrder = new Order { OrderDate = DateTime.Now };
+    context.Orders.Add(newOrder);
+    context.SaveChanges();
+}
+This snippet retrieves all customers, adds a new order, and saves changes to the database.
+
+By leveraging DbContext, we get a robust way to work with databases while minimizing boilerplate code.
+
+
+
+
+
+
+You said:
+explain and give an example of how db mappings are created in c# code related to primary and foreign keys. give an example of how this can simplify implementing a multi-level join t-sql query as c# linq. 
+ChatGPT said:
+ChatGPT
+Response:
+In Entity Framework (EF), you define database mappings using either Data Annotations or the Fluent API to establish relationships between entities, including primary keys and foreign keys. This is essential to ensure that EF knows how to map your C# classes to the correct database tables.
+
+These relationships also make it easier to perform joins through LINQ, reducing the complexity of queries that would otherwise need to be written in T-SQL. Below, I’ll provide an example of primary and foreign key mapping, followed by a multi-level join scenario using LINQ.
+
+Primary and Foreign Key Mapping Example
+Entities and Mappings
+Let's say you have three tables: Customer, Order, and OrderDetail.
+
+Customer: Primary key is CustomerId.
+Order: Has a foreign key to Customer (via CustomerId).
+OrderDetail: Has a foreign key to Order (via OrderId).
+We will map these using both Data Annotations and Fluent API.
+
+Entity Definitions with Data Annotations:
+csharp
+Copy code
+public class Customer
+{
+    [Key]
+    public int CustomerId { get; set; }
+    public string Name { get; set; }
+    
+    // Navigation Property
+    public ICollection<Order> Orders { get; set; }
+}
+
+public class Order
+{
+    [Key]
+    public int OrderId { get; set; }
+    public DateTime OrderDate { get; set; }
+
+    // Foreign Key to Customer
+    public int CustomerId { get; set; }
+
+    // Navigation Properties
+    public Customer Customer { get; set; }
+    public ICollection<OrderDetail> OrderDetails { get; set; }
+}
+
+public class OrderDetail
+{
+    [Key]
+    public int OrderDetailId { get; set; }
+    public string Product { get; set; }
+    public int Quantity { get; set; }
+
+    // Foreign Key to Order
+    public int OrderId { get; set; }
+
+    // Navigation Property
+    public Order Order { get; set; }
+}
+Entity Configuration using Fluent API:
+In the DbContext class, you can configure relationships more explicitly using the Fluent API:
+
+csharp
+Copy code
+public class ApplicationDbContext : DbContext
+{
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Primary Key
+        modelBuilder.Entity<Customer>()
+            .HasKey(c => c.CustomerId);
+
+        // One-to-Many: Customer -> Orders
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.Customer)
+            .WithMany(c => c.Orders)
+            .HasForeignKey(o => o.CustomerId);
+
+        // One-to-Many: Order -> OrderDetails
+        modelBuilder.Entity<OrderDetail>()
+            .HasOne(od => od.Order)
+            .WithMany(o => o.OrderDetails)
+            .HasForeignKey(od => od.OrderId);
+    }
+}
+Here:
+
+Primary Keys are mapped using HasKey().
+Foreign Keys are configured using HasOne() and WithMany().
+This ensures the relationships are properly managed by EF.
+Multi-Level Join: T-SQL vs LINQ Example
+Let’s say you want to write a query that retrieves OrderDetails, along with the Customer Name and Order Date.
+
+T-SQL Query:
+sql
+Copy code
+SELECT 
+    od.OrderDetailId, od.Product, od.Quantity, 
+    o.OrderDate, 
+    c.Name AS CustomerName
+FROM OrderDetails od
+INNER JOIN Orders o ON od.OrderId = o.OrderId
+INNER JOIN Customers c ON o.CustomerId = c.CustomerId;
+This is a straightforward query, but with several joins that can get complex if the schema grows.
+
+Equivalent LINQ Query in C#:
+Using the relationships defined through navigation properties, the LINQ version becomes much simpler and more readable:
+
+csharp
+Copy code
+var query = from od in context.OrderDetails
+            join o in context.Orders on od.OrderId equals o.OrderId
+            join c in context.Customers on o.CustomerId equals c.CustomerId
+            select new
+            {
+                od.OrderDetailId,
+                od.Product,
+                od.Quantity,
+                o.OrderDate,
+                CustomerName = c.Name
+            };
+
+var result = query.ToList();
+Or, even better, leveraging navigation properties:
+
+csharp
+Copy code
+var query = context.OrderDetails
+    .Select(od => new
+    {
+        od.OrderDetailId,
+        od.Product,
+        od.Quantity,
+        od.Order.OrderDate,
+        CustomerName = od.Order.Customer.Name
+    })
+    .ToList();
+How EF and LINQ Simplify Joins:
+Navigation Properties: You don’t need to explicitly write joins unless necessary; the relationships between entities are expressed naturally in the code.
+Strong Typing: LINQ ensures type safety, reducing runtime errors compared to raw SQL queries.
+Cleaner Code: By leveraging the DbContext relationships, the LINQ query is easier to understand and maintain, especially when the schema evolves.
+Conclusion:
+With proper primary and foreign key mappings, EF Core allows developers to express complex T-SQL joins in a more intuitive way using LINQ. This makes the code cleaner, more maintainable, and easier to refactor over time.

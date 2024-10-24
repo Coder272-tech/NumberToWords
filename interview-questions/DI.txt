@@ -1,0 +1,183 @@
+
+In C# applications, particularly in ASP.NET Core, Dependency Injection (DI) is a powerful pattern used to manage the lifecycle of services. ASP.NET Core’s built-in IoC (Inversion of Control) container allows you to register services with three main lifetimes: Singleton, Scoped, and Transient. Each registration method determines how the service instances are managed and used throughout the application.
+
+1. AddSingleton
+Usage:
+A singleton service is created once and shared across the entire application.
+Useful for stateless services or heavy objects that need to be reused (e.g., configurations, logging services).
+Example Context:
+A caching service or a configuration reader that should persist across the application.
+csharp
+Copy code
+public interface ICacheService
+{
+    string Get(string key);
+    void Set(string key, string value);
+}
+
+public class CacheService : ICacheService
+{
+    private readonly Dictionary<string, string> _cache = new();
+
+    public string Get(string key) => _cache.ContainsKey(key) ? _cache[key] : null;
+
+    public void Set(string key, string value) => _cache[key] = value;
+}
+
+// Register as Singleton
+builder.Services.AddSingleton<ICacheService, CacheService>();
+Explanation:
+Every time a class requests ICacheService, the same instance of CacheService is provided. This is ideal for caching mechanisms since we want to maintain state throughout the application's lifetime.
+
+2. AddScoped
+Usage:
+A scoped service is created once per request (or per scope).
+This means that within a single HTTP request, the same instance is used. However, a new instance is created for each new request.
+Great for unit of work patterns or database contexts, where each request should have an isolated data context.
+Example Context:
+Using Entity Framework's DbContext in a web application, where each HTTP request needs a fresh context.
+csharp
+Copy code
+public class ApplicationDbContext : DbContext
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+        : base(options) { }
+}
+
+// Register as Scoped
+builder.Services.AddScoped<ApplicationDbContext>();
+Explanation:
+Each HTTP request to the server will get a new ApplicationDbContext instance, ensuring that changes within one request do not affect another.
+
+3. AddTransient
+Usage:
+A transient service is created each time it is requested.
+Best for lightweight, stateless services that are inexpensive to create and can be disposed of quickly.
+Used when you don’t need to maintain any state between method calls or across requests.
+Example Context:
+A service that formats dates or strings, since it's stateless and quick to create.
+csharp
+Copy code
+public interface IDateFormatter
+{
+    string FormatDate(DateTime date);
+}
+
+public class DateFormatter : IDateFormatter
+{
+    public string FormatDate(DateTime date) => date.ToString("yyyy-MM-dd");
+}
+
+// Register as Transient
+builder.Services.AddTransient<IDateFormatter, DateFormatter>();
+Explanation:
+Every time a class asks for IDateFormatter, a new instance of DateFormatter is provided. This is useful when the object is simple and has no internal state to maintain between calls.
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Comparison of AddSingleton, AddScoped, and AddTransient
+
+Lifetime    | Instance Created           | Use Case Example                 | Reusability | Memory Impact
+------------|----------------------------|----------------------------------|-------------|--------------
+Singleton   | Once (for the entire app)  | Caching, Configuration, Logging | High        | Low
+Scoped      | Once per request (scope)   | EF Core DbContext, Unit of Work | Medium      | Moderate
+Transient   | Every time requested       | Formatting Service, Lightweight | Low         | High
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------
+
+
+4. Combining DI with Constructor Injection:
+Example: Using All Three Types in a Controller
+csharp
+Copy code
+public class MyController : ControllerBase
+{
+    private readonly ICacheService _cacheService;         // Singleton
+    private readonly ApplicationDbContext _dbContext;     // Scoped
+    private readonly IDateFormatter _dateFormatter;       // Transient
+
+    public MyController(
+        ICacheService cacheService, 
+        ApplicationDbContext dbContext, 
+        IDateFormatter dateFormatter)
+    {
+        _cacheService = cacheService;
+        _dbContext = dbContext;
+        _dateFormatter = dateFormatter;
+    }
+
+    [HttpGet]
+    public IActionResult Get()
+    {
+        // Use cache service (Singleton)
+        _cacheService.Set("key", "value");
+        
+        // Use DbContext (Scoped)
+        var data = _dbContext.Orders.ToList();
+
+        // Use date formatter (Transient)
+        var formattedDate = _dateFormatter.FormatDate(DateTime.Now);
+
+        return Ok(new { data, formattedDate });
+    }
+}
+In this example:
+
+ICacheService is a singleton, meaning the same instance will be used for the lifetime of the application.
+ApplicationDbContext is scoped, so each HTTP request will get a new instance, ensuring isolation between requests.
+IDateFormatter is transient, and a new instance is created every time the controller is instantiated.
+Summary: When to Use Each Type
+Singleton: When you need a single, long-living instance across the whole application (e.g., caching, logging).
+Scoped: When you want to ensure a consistent state within a request, but isolated across requests (e.g., DbContext).
+Transient: When your service is stateless and quick to create, and you don’t need to maintain any state between uses (e.g., formatting utilities).
+Understanding these lifetimes allows you to optimize memory usage, improve performance, and ensure proper behavior for each service in your application.
+
