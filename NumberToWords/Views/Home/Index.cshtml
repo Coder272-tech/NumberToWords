@@ -1,37 +1,40 @@
-﻿@{
+﻿@model NumberToWordsSite.Controllers.HomeController.AmountRequest
+
+@{
     ViewData["Title"] = "Number To Words Converter";
 }
 
-<h2>Number To Words Converter</h2>
+<h2>@ViewData["Title"]</h2>
 
-<div>
-    <input type="text" id="numberInput" placeholder="Enter a number" />
-    <button onclick="convertToWords()">Convert</button>
-</div>
+<!-- Razor Form with Text Input and Submit Button -->
+@using (Html.BeginForm("ConvertToWords", "Home", FormMethod.Post, new { @class = "form-group" }))
+{
+    <div class="mb-3">
+        @Html.LabelFor(model => model.Amount, "Enter a Number", new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Amount, new { 
+            @class = "form-control", 
+            placeholder = "Enter a number", 
+            id = "numberInput" 
+        })
+    </div>
 
-<div id="result"></div>
+    <div>
+        <input type="submit" value="Convert" class="btn btn-primary" />  <!-- Submit Button -->
+    </div>
+}
 
-@section Scripts {
-    <script type="text/javascript">
-        function convertToWords() {
-            const number = document.getElementById('numberInput').value;
+<!-- Display the Result if Available -->
+@if (ViewData["Result"] != null)
+{
+    <div id="result" class="mt-3 alert alert-success">
+        @ViewData["Result"]
+    </div>
+}
 
-            fetch('/Home/ConvertToWords', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ amount: number })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('result').innerText = data.words;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('result').innerText = 'Error converting number to words';
-                });
-        }
-    </script>
+<!-- Display an Error if Available -->
+@if (ViewData["Error"] != null)
+{
+    <div class="mt-3 alert alert-danger">
+        @ViewData["Error"]
+    </div>
 }

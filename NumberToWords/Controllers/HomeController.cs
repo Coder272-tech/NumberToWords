@@ -17,14 +17,18 @@ namespace NumberToWordsSite.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConvertToWords([FromBody] AmountRequest request)
+        public IActionResult ConvertToWords(AmountRequest request)
         {
             try
             {
                 _logger.LogInformation("ConvertToWords accessed.");
                 var processor = new NumberToWordsProcessor();
                 string words = processor.Convert(request.Amount);
-                return Json(new { words });
+                // Pass the result and amount back to the view using ViewData or ViewBag
+                ViewData["Result"] = words;
+                ViewData["Amount"] = request.Amount;
+
+                return View("Index", request);  // Return the Index view with the request model
             }
             catch (Exception ex)
             {
