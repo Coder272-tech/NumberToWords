@@ -1,0 +1,14 @@
+Thousand: 1,000
+Million: 1,000,000 (10^6)
+Billion: 1,000,000,000 (10^9)
+Trillion: 1,000,000,000,000 (10^12)
+Quadrillion: 1,000,000,000,000,000 (10^15)
+Quintillion: 1,000,000,000,000,000,000 (10^18)
+Sextillion: 1,000,000,000,000,000,000,000 (10^21)
+Septillion: 1,000,000,000,000,000,000,000,000 (10^24)
+Octillion: 1,000,000,000,000,000,000,000,000,000 (10^27)
+Nonillion: 1,000,000,000,000,000,000,000,000,000,000 (10^30)
+Decillion: 1,000,000,000,000,000,000,000,000,000,000,000 (10^33)
+So, the next unit after trillion is quadrillion.
+
+This sequence follows the pattern based on Latin-derived prefixes, incrementing by powers of three (e.g., million: 10^6, billion: 10^9, trillion: 10^12, etc.).
