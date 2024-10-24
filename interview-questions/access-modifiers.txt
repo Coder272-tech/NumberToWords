@@ -1,0 +1,82 @@
+1. Access Modifiers for Classes
+public:
+The class is accessible from any other code in the same or different assemblies.
+
+csharp
+Copy code
+public class MyClass { }
+internal (default for classes):
+The class is accessible only within the same assembly (project). It cannot be accessed from other assemblies.
+
+csharp
+Copy code
+internal class MyClass { }
+abstract:
+The class cannot be instantiated directly. It can only be inherited by other classes.
+
+csharp
+Copy code
+public abstract class MyClass { }
+sealed:
+The class cannot be inherited.
+
+csharp
+Copy code
+public sealed class MyClass { }
+static:
+The class cannot be instantiated and all its members must be static.
+
+csharp
+Copy code
+public static class MyClass { }
+2. Access Modifiers for Class Members (fields, methods, properties, etc.)
+public:
+The member is accessible from anywhere.
+
+csharp
+Copy code
+public int MyProperty { get; set; }
+private:
+The member is accessible only within the same class.
+
+csharp
+Copy code
+private int myField;
+protected:
+The member is accessible within the same class and by derived classes.
+
+csharp
+Copy code
+protected void MyMethod() { }
+internal:
+The member is accessible within the same assembly.
+
+csharp
+Copy code
+internal string MyMethod() { }
+protected internal:
+The member is accessible within the same assembly or from derived classes, even if they are in a different assembly.
+
+csharp
+Copy code
+protected internal void MyMethod() { }
+private protected:
+The member is accessible within the same class or derived classes, but only within the same assembly.
+
+csharp
+Copy code
+private protected void MyMethod() { }
+3. Other Modifiers for Classes and Members
+readonly:
+Can only be assigned during declaration or in the constructor. Applicable to fields.
+
+csharp
+Copy code
+private readonly int myField = 10;
+const:
+A compile-time constant. Its value is fixed and cannot be changed.
+
+csharp
+Copy code
+public const double Pi = 3.14;
+These access modifiers allow you to control the visibility and scope of classes and their members, promoting encapsulation and modular design in your code.

@@ -1,0 +1,18 @@
+369
+
+I saw the ViewBag in MVC 3. How's that different than ViewData in MVC 2?
+
+
+It uses the C# 4.0 dynamic feature. It achieves the same goal as viewdata and should be avoided in favor of using strongly typed view models (the same way as viewdata should be avoided).
+
+So basically it replaces magic strings:
+
+ViewData["Foo"]
+with magic properties:
+
+ViewBag.Foo
+for which you have no compile time safety.
+
+I continue to blame Microsoft for ever introducing this concept in MVC.
+
+The name of the properties are case sensitive.

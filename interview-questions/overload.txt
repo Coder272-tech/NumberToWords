@@ -1,0 +1,15 @@
+       // Default constructor: builds the chain manually
+        public NumberToWordsProcessor()
+        {
+            _handlerChain = new BillionsHandler();
+            _handlerChain
+                .SetNext(new MillionsHandler())
+                .SetNext(new ThousandsHandler())
+                .SetNext(new UnitsHandler());
+        }
+
+        // Overloaded constructor: accepts a list of handlers
+        public NumberToWordsProcessor(IEnumerable<INumberHandler> handlers)
+        {
+            _handlerChain = BuildHandlerChain(handlers);
+        }
